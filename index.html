@@ -1,47 +1,245 @@
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ZEEBAA Test</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>سازا-1 | زِخاک بَرآیَد حَیات</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0a0a2a;
-            color: white;
-            font-family: system-ui;
+            background: #000000;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            padding: 20px;
         }
-        .box {
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 30px;
+            gap: 30px;
         }
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #fff;
-            border-top: 5px solid #ffaa33;
-            border-radius: 50%;
-            margin: 20px auto;
-            animation: spin 1s linear infinite;
+
+        .loader-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+            border-radius: 24px;
+            padding: 20px;
+            width: 100%;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: transparent;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
+
+        .poem-line {
+            color: #ffffff;
+            font-size: clamp(0.9rem, 5vw, 1.3rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-align: center;
+            font-family: 'Times New Roman', 'Poppins', system-ui, serif;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            animation: fadePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fadePulse {
+            0% { opacity: 0.6; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+            100% { opacity: 0.6; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        }
+
+        @media (max-width: 220px) {
+            .poem-line { font-size: 0.7rem; }
+        }
+
+        @media (min-width: 376px) {
+            .poem-line { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <div class="loader"></div>
-        <h1>🌍 ZEEBAA</h1>
-        <p>در حال بارگذاری...</p>
-        <p style="font-size:12px; margin-top:20px;">✅ صفحه تست کار میکند!</p>
+    <div class="container">
+        <div class="loader-box">
+            <canvas id="sazaLoader" width="500" height="160" aria-label="لودینگ لوگوی سازا - انیمیشن حیات" role="img"></canvas>
+        </div>
+        <div class="poem-line">
+            زِخاک بَرآیَد حَیات ...
+        </div>
     </div>
+
+    <script>
+        // ============================================
+        // اصلاح‌شده: فریم ۱ = نیمه (h:3)، نه کامل با نقطه
+        // الگو: نقطه → نیمه → کامل (۱ ستون)
+        // سپس: کامل+۲نقطه → کامل+۲نیمه → ۳کامل
+        // ============================================
+        
+        const FINAL_FRAME = [
+            {x:4, y:20, w:1, h:5},
+            {x:6, y:20, w:1, h:5},
+            {x:8, y:20, w:1, h:5},
+            {x:20, y:20, w:1, h:5},
+            {x:18, y:20, w:1, h:5},
+            {x:16, y:20, w:1, h:5},
+            {x:14, y:20, w:1, h:5},
+            {x:12, y:20, w:1, h:5},
+            {x:0, y:20, w:1, h:5},
+            {x:2, y:20, w:1, h:5},
+            {x:10, y:20, w:1, h:5}
+        ];
+
+        const framesRaw = [
+            // --- ۱ ستون: نقطه → نیمه → کامل ---
+            // فریم ۰: نقطه در مرکز
+            { rects: [{x:10, y:22, w:1, h:1}] },
+            // فریم ۱: نیمه (اصلاح‌شده — قبلاً کامل+نقطه بود)
+            { rects: [{x:10, y:21, w:1, h:3}] },
+            // فریم ۲: کامل (ستون وسط آماده شد)
+            { rects: [{x:10, y:20, w:1, h:5}] },
+            
+            // --- ۳ ستون: کامل+۲نقطه → کامل+۲نیمه → ۳کامل ---
+            // فریم ۳
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:22, w:1, h:1}, {x:12, y:22, w:1, h:1}] },
+            // فریم ۴
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:21, w:1, h:3}, {x:12, y:21, w:1, h:3}] },
+            // فریم ۵
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}] },
+            
+            // --- ۵ ستون ---
+            // فریم ۶
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:22, w:1, h:1}, {x:14, y:22, w:1, h:1}] },
+            // فریم ۷
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:21, w:1, h:3}, {x:14, y:21, w:1, h:3}] },
+            // فریم ۸
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}] },
+            
+            // --- ۷ ستون ---
+            // فریم ۹
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:22, w:1, h:1}, {x:16, y:22, w:1, h:1}] },
+            // فریم ۱۰
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:21, w:1, h:3}, {x:16, y:21, w:1, h:3}] },
+            // فریم ۱۱
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}] },
+            
+            // --- ۹ ستون ---
+            // فریم ۱۲
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:22, w:1, h:1}, {x:18, y:22, w:1, h:1}] },
+            // فریم ۱۳
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:21, w:1, h:3}, {x:18, y:21, w:1, h:3}] },
+            // فریم ۱۴
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:20, w:1, h:5}, {x:18, y:20, w:1, h:5}] },
+            
+            // --- ۱۱ ستون ---
+            // فریم ۱۵
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:20, w:1, h:5}, {x:18, y:20, w:1, h:5}, {x:0, y:22, w:1, h:1}, {x:20, y:22, w:1, h:1}] },
+            // فریم ۱۶
+            { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:20, w:1, h:5}, {x:18, y:20, w:1, h:5}, {x:0, y:21, w:1, h:3}, {x:20, y:21, w:1, h:3}] },
+            // فریم ۱۷
+            { rects: FINAL_FRAME }
+        ];
+
+        const ORIGINAL_W = 21;
+        const ORIGINAL_H = 21;
+        
+        const canvas = document.getElementById('sazaLoader');
+        const ctx = canvas.getContext('2d');
+        
+        let currentFrame = 0;
+        let animInterval = null;
+        
+        function resizeAndDraw() {
+            const container = canvas.parentElement;
+            const maxWidth = Math.min(container.clientWidth, 500);
+            const targetW = Math.max(maxWidth, 180);
+            const targetH = targetW;
+            
+            canvas.width = targetW;
+            canvas.height = targetH;
+            
+            const scaleX = canvas.width / ORIGINAL_W;
+            const scaleY = canvas.height / ORIGINAL_H;
+            drawFrame(currentFrame, scaleX, scaleY);
+        }
+        
+        function drawFrame(frameIdx, sx, sy) {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (frameIdx >= framesRaw.length) return;
+            
+            const frame = framesRaw[frameIdx];
+            ctx.save();
+            
+            const offsetY = -8;
+            
+            ctx.translate(0, offsetY * sy);
+            ctx.scale(sx, sy);
+            ctx.fillStyle = "#D4D4D4";
+            
+            frame.rects.forEach(rect => {
+                if (rect.h === 1) {
+                    ctx.beginPath();
+                    ctx.arc(rect.x + 0.5, rect.y + 0.5, 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    const r = 0.5;
+                    const x = rect.x;
+                    const y = rect.y;
+                    const w = rect.w;
+                    const h = rect.h;
+                    
+                    ctx.moveTo(x + r, y);
+                    ctx.lineTo(x + w - r, y);
+                    ctx.arcTo(x + w, y, x + w, y + r, r);
+                    ctx.lineTo(x + w, y + h - r);
+                    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+                    ctx.lineTo(x + r, y + h);
+                    ctx.arcTo(x, y + h, x, y + h - r, r);
+                    ctx.lineTo(x, y + r);
+                    ctx.arcTo(x, y, x + r, y, r);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            });
+            ctx.restore();
+        }
+        
+        function nextFrame() {
+            currentFrame = (currentFrame + 1) % framesRaw.length;
+            const sx = canvas.width / ORIGINAL_W;
+            const sy = canvas.height / ORIGINAL_H;
+            drawFrame(currentFrame, sx, sy);
+        }
+        
+        function startAnimation() {
+            if (animInterval) clearInterval(animInterval);
+            animInterval = setInterval(nextFrame, 150);
+        }
+        
+        window.addEventListener('resize', () => {
+            resizeAndDraw();
+        });
+        
+        resizeAndDraw();
+        startAnimation();
+    </script>
 </body>
 </html>
