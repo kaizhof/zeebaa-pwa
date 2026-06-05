@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>سازا-1 | زِخاک بَرآیَد حَیات</title>
+    <title>K | بازی در دنیای خیالی</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="K">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="بازی در دنیای خیالی K">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -19,6 +30,34 @@
             align-items: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', system-ui, sans-serif;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* فضای خیالی - ستاره‌های دوردست */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 60px 170px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 120px 80px, #ffd, rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 280px 250px, #aaa, rgba(0,0,0,0));
+            background-repeat: no-repeat;
+            background-size: 200px 200px, 300px 300px, 250px 250px, 400px 400px;
+            opacity: 0.4;
+            pointer-events: none;
+            animation: starsFloat 20s linear infinite;
+        }
+
+        @keyframes starsFloat {
+            0% { transform: translateY(0px); opacity: 0.3; }
+            50% { transform: translateY(-20px); opacity: 0.6; }
+            100% { transform: translateY(0px); opacity: 0.3; }
         }
 
         .container {
@@ -28,6 +67,27 @@
             align-items: center;
             text-align: center;
             gap: 30px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* لوگوی K */
+        .logo-k {
+            font-size: clamp(80px, 25vw, 180px);
+            font-weight: 900;
+            background: linear-gradient(135deg, #D4D4D4 0%, #888888 50%, #D4D4D4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(212,212,212,0.3);
+            letter-spacing: -10px;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0% { text-shadow: 0 0 20px rgba(212,212,212,0.2); }
+            50% { text-shadow: 0 0 50px rgba(212,212,212,0.6); }
+            100% { text-shadow: 0 0 20px rgba(212,212,212,0.2); }
         }
 
         .loader-box {
@@ -47,6 +107,12 @@
             width: 100%;
             max-width: 500px;
             height: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        canvas:active {
+            transform: scale(0.98);
         }
 
         .poem-line {
@@ -57,17 +123,56 @@
             text-align: center;
             font-family: 'Times New Roman', 'Poppins', system-ui, serif;
             text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            animation: fadePulse 2s ease-in-out infinite;
+            animation: fadePulse 2.5s ease-in-out infinite;
+            direction: rtl;
         }
 
         @keyframes fadePulse {
-            0% { opacity: 0.6; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
-            50% { opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
-            100% { opacity: 0.6; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            0% { opacity: 0.5; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            50% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.6); }
+            100% { opacity: 0.5; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        }
+
+        /* دکمه شروع */
+        .start-btn {
+            background: transparent;
+            border: 2px solid rgba(212,212,212,0.5);
+            color: #D4D4D4;
+            padding: 12px 32px;
+            font-size: 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            border-color: #D4D4D4;
+            background: rgba(212,212,212,0.1);
+            transform: scale(1.05);
+        }
+
+        .start-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* حالت غبارآلود خیالی */
+        .dream-dust {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
+            z-index: 5;
         }
 
         @media (max-width: 220px) {
             .poem-line { font-size: 0.7rem; }
+            .logo-k { font-size: 60px; letter-spacing: -5px; }
         }
 
         @media (min-width: 376px) {
@@ -76,20 +181,21 @@
     </style>
 </head>
 <body>
+    <div class="dream-dust"></div>
     <div class="container">
+        <div class="logo-k">K</div>
         <div class="loader-box">
-            <canvas id="sazaLoader" width="500" height="160" aria-label="لودینگ لوگوی سازا - انیمیشن حیات" role="img"></canvas>
+            <canvas id="sazaLoader" width="500" height="160" aria-label="دنیای خیالی K - انیمیشن حیات" role="img"></canvas>
         </div>
         <div class="poem-line">
-            زِخاک بَرآیَد حَیات ...
+            زِ خاک بِرآیَد حَیات...
         </div>
+        <button class="start-btn" id="startBtn">✦ وارد دنیای K شو ✦</button>
     </div>
 
     <script>
         // ============================================
-        // اصلاح‌شده: فریم ۱ = نیمه (h:3)، نه کامل با نقطه
-        // الگو: نقطه → نیمه → کامل (۱ ستون)
-        // سپس: کامل+۲نقطه → کامل+۲نیمه → ۳کامل
+        // انیمیشن حیات - دنیای خیالی K
         // ============================================
         
         const FINAL_FRAME = [
@@ -107,52 +213,23 @@
         ];
 
         const framesRaw = [
-            // --- ۱ ستون: نقطه → نیمه → کامل ---
-            // فریم ۰: نقطه در مرکز
             { rects: [{x:10, y:22, w:1, h:1}] },
-            // فریم ۱: نیمه (اصلاح‌شده — قبلاً کامل+نقطه بود)
             { rects: [{x:10, y:21, w:1, h:3}] },
-            // فریم ۲: کامل (ستون وسط آماده شد)
             { rects: [{x:10, y:20, w:1, h:5}] },
-            
-            // --- ۳ ستون: کامل+۲نقطه → کامل+۲نیمه → ۳کامل ---
-            // فریم ۳
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:22, w:1, h:1}, {x:12, y:22, w:1, h:1}] },
-            // فریم ۴
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:21, w:1, h:3}, {x:12, y:21, w:1, h:3}] },
-            // فریم ۵
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}] },
-            
-            // --- ۵ ستون ---
-            // فریم ۶
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:22, w:1, h:1}, {x:14, y:22, w:1, h:1}] },
-            // فریم ۷
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:21, w:1, h:3}, {x:14, y:21, w:1, h:3}] },
-            // فریم ۸
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}] },
-            
-            // --- ۷ ستون ---
-            // فریم ۹
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:22, w:1, h:1}, {x:16, y:22, w:1, h:1}] },
-            // فریم ۱۰
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:21, w:1, h:3}, {x:16, y:21, w:1, h:3}] },
-            // فریم ۱۱
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}] },
-            
-            // --- ۹ ستون ---
-            // فریم ۱۲
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:22, w:1, h:1}, {x:18, y:22, w:1, h:1}] },
-            // فریم ۱۳
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:21, w:1, h:3}, {x:18, y:21, w:1, h:3}] },
-            // فریم ۱۴
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:20, w:1, h:5}, {x:18, y:20, w:1, h:5}] },
-            
-            // --- ۱۱ ستون ---
-            // فریم ۱۵
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:20, w:1, h:5}, {x:18, y:20, w:1, h:5}, {x:0, y:22, w:1, h:1}, {x:20, y:22, w:1, h:1}] },
-            // فریم ۱۶
             { rects: [{x:10, y:20, w:1, h:5}, {x:8, y:20, w:1, h:5}, {x:12, y:20, w:1, h:5}, {x:6, y:20, w:1, h:5}, {x:14, y:20, w:1, h:5}, {x:4, y:20, w:1, h:5}, {x:16, y:20, w:1, h:5}, {x:2, y:20, w:1, h:5}, {x:18, y:20, w:1, h:5}, {x:0, y:21, w:1, h:3}, {x:20, y:21, w:1, h:3}] },
-            // فریم ۱۷
             { rects: FINAL_FRAME }
         ];
 
@@ -234,12 +311,48 @@
             animInterval = setInterval(nextFrame, 150);
         }
         
+        // کلیک روی canvas - تعامل با دنیای خیالی
+        canvas.addEventListener('click', () => {
+            canvas.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                canvas.style.transform = 'scale(1)';
+            }, 150);
+            
+            // افکت صوتی خیالی (وزوز خفیف)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+            oscillator.frequency.value = 440;
+            gain.gain.value = 0.05;
+            oscillator.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.5);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        });
+        
+        // دکمه شروع
+        document.getElementById('startBtn').addEventListener('click', () => {
+            alert('✦ به دنیای خیالی K خوش آمدی ✦\n\nاین تازه شروع ماجراست...\nبه زودی ماجراجویی بزرگ در راه است.');
+        });
+        
         window.addEventListener('resize', () => {
             resizeAndDraw();
         });
         
         resizeAndDraw();
         startAnimation();
+
+        // ============================================
+        // PWA Service Worker Registration
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(() => {
+                console.log('✅ Service Worker registered');
+            }).catch(err => {
+                console.log('SW registration failed:', err);
+            });
+        }
     </script>
 </body>
 </html>
