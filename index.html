@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>K | بازی در دنیای خیالی</title>
+    <title>K</title>
     
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
@@ -11,53 +11,44 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="K">
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="بازی در دنیای خیالی K">
+    <meta name="description" content="K - زِ خاک بِرآیَد حَیات">
     
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* فونت‌های لوکال لایون عربی */
+        @font-face {
+            font-family: 'Lyon Arabic Display';
+            src: url('K-space/fonts/LyonArabicDisplayRegular.woff2') format('woff2'),
+                 url('K-space/fonts/LyonArabicDisplayRegular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Lyon Arabic Display';
+            src: url('K-space/fonts/LyonArabicDisplayBlack.woff2') format('woff2'),
+                 url('K-space/fonts/LyonArabicDisplayBlack.woff') format('woff');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
         }
 
         body {
             background: #000000;
             min-height: 100vh;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            font-family: 'Lyon Arabic Display', 'Times New Roman', 'Poppins', system-ui, serif;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* فضای خیالی - ستاره‌های دوردست */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 60px 170px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 120px 80px, #ffd, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 280px 250px, #aaa, rgba(0,0,0,0));
-            background-repeat: no-repeat;
-            background-size: 200px 200px, 300px 300px, 250px 250px, 400px 400px;
-            opacity: 0.4;
-            pointer-events: none;
-            animation: starsFloat 20s linear infinite;
-        }
-
-        @keyframes starsFloat {
-            0% { transform: translateY(0px); opacity: 0.3; }
-            50% { transform: translateY(-20px); opacity: 0.6; }
-            100% { transform: translateY(0px); opacity: 0.3; }
+            margin: 0;
         }
 
         .container {
@@ -66,28 +57,8 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 30px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* لوگوی K */
-        .logo-k {
-            font-size: clamp(80px, 25vw, 180px);
-            font-weight: 900;
-            background: linear-gradient(135deg, #D4D4D4 0%, #888888 50%, #D4D4D4 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 30px rgba(212,212,212,0.3);
-            letter-spacing: -10px;
-            animation: logoGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes logoGlow {
-            0% { text-shadow: 0 0 20px rgba(212,212,212,0.2); }
-            50% { text-shadow: 0 0 50px rgba(212,212,212,0.6); }
-            100% { text-shadow: 0 0 20px rgba(212,212,212,0.2); }
+            gap: clamp(20px, 6vh, 50px);
+            width: 100%;
         }
 
         .loader-box {
@@ -95,9 +66,10 @@
             justify-content: center;
             align-items: center;
             background: transparent;
-            border-radius: 24px;
-            padding: 20px;
             width: 100%;
+            max-width: min(80vw, 80vh, 500px);
+            min-width: 140px;
+            margin: 0 auto;
         }
 
         canvas {
@@ -105,111 +77,108 @@
             margin: 0 auto;
             background: transparent;
             width: 100%;
-            max-width: 500px;
             height: auto;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        canvas:active {
-            transform: scale(0.98);
+            aspect-ratio: 1 / 1;
         }
 
         .poem-line {
             color: #ffffff;
-            font-size: clamp(0.9rem, 5vw, 1.3rem);
-            font-weight: 300;
+            font-size: clamp(0.85rem, 5vw, 1.4rem);
+            font-weight: 400;
             letter-spacing: 2px;
             text-align: center;
-            font-family: 'Times New Roman', 'Poppins', system-ui, serif;
+            font-family: 'Lyon Arabic Display', 'Times New Roman', serif;
             text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            animation: fadePulse 2.5s ease-in-out infinite;
+            animation: fadePulse 2.2s ease-in-out infinite;
+            background: transparent;
+            padding: 0.3rem 0.8rem;
             direction: rtl;
+            white-space: nowrap;
         }
 
         @keyframes fadePulse {
-            0% { opacity: 0.5; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
-            50% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.6); }
-            100% { opacity: 0.5; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            0% { opacity: 0.6; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+            100% { opacity: 0.6; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
         }
 
-        /* دکمه شروع */
-        .start-btn {
-            background: transparent;
-            border: 2px solid rgba(212,212,212,0.5);
-            color: #D4D4D4;
-            padding: 12px 32px;
-            font-size: 1rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            margin-top: 20px;
-        }
-
-        .start-btn:hover {
-            border-color: #D4D4D4;
-            background: rgba(212,212,212,0.1);
-            transform: scale(1.05);
-        }
-
-        .start-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* حالت غبارآلود خیالی */
-        .dream-dust {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
-            z-index: 5;
-        }
-
-        @media (max-width: 220px) {
-            .poem-line { font-size: 0.7rem; }
-            .logo-k { font-size: 60px; letter-spacing: -5px; }
+        @media (max-width: 200px) {
+            .poem-line {
+                font-size: 0.7rem;
+                white-space: normal;
+            }
+            .loader-box {
+                min-width: 100px;
+            }
         }
 
         @media (min-width: 376px) {
-            .poem-line { font-size: 1.2rem; }
+            .poem-line {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .loader-box {
+                max-width: min(45vw, 45vh, 450px);
+            }
+            .poem-line {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dream-dust"></div>
     <div class="container">
-        <div class="logo-k">K</div>
         <div class="loader-box">
-            <canvas id="sazaLoader" width="500" height="160" aria-label="دنیای خیالی K - انیمیشن حیات" role="img"></canvas>
+            <canvas id="sazaLoader" aria-label="K loader - animation of life" role="img"></canvas>
         </div>
-        <div class="poem-line">
+        <div class="poem-line" id="poemText">
             زِ خاک بِرآیَد حَیات...
         </div>
-        <button class="start-btn" id="startBtn">✦ وارد دنیای K شو ✦</button>
     </div>
 
     <script>
-        // ============================================
-        // انیمیشن حیات - دنیای خیالی K
-        // ============================================
+        // ============================================================
+        // انیمیشن سازا - نمونه اولیه دقیق (فرم میله‌ای با گوشه‌های گرد)
+        // الگو: نقطه → نیمه → کامل (۱ ستون)
+        // سپس: کامل+۲نقطه → کامل+۲نیمه → ۳کامل → ... تا ۱۱ ستون
+        // ============================================================
+        
+        // متن‌ها به زبان‌های مختلف
+        const texts = [
+            "زِ خاک بِرآیَد حَیات...",           // فارسی
+            "From dust comes life...",            // انگلیسی
+            "De la poussière vient la vie...",    // فرانسوی
+            "Aus Staub entsteht Leben...",        // آلمانی
+            "Del polvo surge la vida...",         // اسپانیایی
+            "Dalla polvere nasce la vita...",     // ایتالیایی
+            "Из праха возникает жизнь...",        // روسی
+            "Tozdan hayat doğar...",              // ترکی
+            "من الغبار تنبثق الحياة...",          // عربی
+            "Kebuluran menjadi hidup...",         // اندونزیایی
+            "З пороху постає життя...",           // اوکراینی
+            "धूल से जीवन आता है...",              // هندی
+            "از خاک زندگی پدید می‌آید...",         // فارسی (دری)
+            "Zə torpaqdan həyat yaranır...",      // آذری
+            "З праху ўзнікае жыццё...",           // بلاروسی
+            "זו שטויב קומט לעבן...",              // ییدیش
+            "تراب سے زندگی آتی ہے...",             // اردو
+            "زِ خاک بِرآیَد حَیات..."             // برگشت به فارسی
+        ];
         
         const FINAL_FRAME = [
+            {x:0, y:20, w:1, h:5},
+            {x:2, y:20, w:1, h:5},
             {x:4, y:20, w:1, h:5},
             {x:6, y:20, w:1, h:5},
             {x:8, y:20, w:1, h:5},
-            {x:20, y:20, w:1, h:5},
-            {x:18, y:20, w:1, h:5},
-            {x:16, y:20, w:1, h:5},
-            {x:14, y:20, w:1, h:5},
+            {x:10, y:20, w:1, h:5},
             {x:12, y:20, w:1, h:5},
-            {x:0, y:20, w:1, h:5},
-            {x:2, y:20, w:1, h:5},
-            {x:10, y:20, w:1, h:5}
+            {x:14, y:20, w:1, h:5},
+            {x:16, y:20, w:1, h:5},
+            {x:18, y:20, w:1, h:5},
+            {x:20, y:20, w:1, h:5}
         ];
 
         const framesRaw = [
@@ -234,40 +203,51 @@
         ];
 
         const ORIGINAL_W = 21;
-        const ORIGINAL_H = 21;
+        const ORIGINAL_H = 25;
         
         const canvas = document.getElementById('sazaLoader');
         const ctx = canvas.getContext('2d');
         
         let currentFrame = 0;
         let animInterval = null;
+        let textIndex = 0;
+        let textInterval = null;
         
-        function resizeAndDraw() {
-            const container = canvas.parentElement;
-            const maxWidth = Math.min(container.clientWidth, 500);
-            const targetW = Math.max(maxWidth, 180);
-            const targetH = targetW;
-            
-            canvas.width = targetW;
-            canvas.height = targetH;
-            
-            const scaleX = canvas.width / ORIGINAL_W;
-            const scaleY = canvas.height / ORIGINAL_H;
-            drawFrame(currentFrame, scaleX, scaleY);
+        const textElement = document.getElementById('poemText');
+        
+        function drawRoundedRect(ctx, x, y, w, h, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.arcTo(x + w, y, x + w, y + radius, radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.arcTo(x + w, y + h, x + w - radius, y + h, radius);
+            ctx.lineTo(x + radius, y + h);
+            ctx.arcTo(x, y + h, x, y + h - radius, radius);
+            ctx.lineTo(x, y + radius);
+            ctx.arcTo(x, y, x + radius, y, radius);
+            ctx.closePath();
+            ctx.fill();
         }
         
-        function drawFrame(frameIdx, sx, sy) {
+        function drawFrame(frameIdx, scaleX, scaleY, canvasWidth, canvasHeight) {
             if (!ctx) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             if (frameIdx >= framesRaw.length) return;
             
             const frame = framesRaw[frameIdx];
             ctx.save();
             
-            const offsetY = -8;
+            const contentMinY = 20;
+            const contentMaxY = 25;
+            const contentCenterY = (contentMinY + contentMaxY) / 2;
             
-            ctx.translate(0, offsetY * sy);
-            ctx.scale(sx, sy);
+            const canvasCenterY = canvasHeight / 2;
+            const contentCenterYScaled = contentCenterY * scaleY;
+            const offsetYPixels = canvasCenterY - contentCenterYScaled;
+            
+            ctx.translate(0, offsetYPixels);
+            ctx.scale(scaleX, scaleY);
             ctx.fillStyle = "#D4D4D4";
             
             frame.rects.forEach(rect => {
@@ -276,34 +256,40 @@
                     ctx.arc(rect.x + 0.5, rect.y + 0.5, 0.5, 0, Math.PI * 2);
                     ctx.fill();
                 } else {
-                    ctx.beginPath();
-                    const r = 0.5;
-                    const x = rect.x;
-                    const y = rect.y;
-                    const w = rect.w;
-                    const h = rect.h;
-                    
-                    ctx.moveTo(x + r, y);
-                    ctx.lineTo(x + w - r, y);
-                    ctx.arcTo(x + w, y, x + w, y + r, r);
-                    ctx.lineTo(x + w, y + h - r);
-                    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
-                    ctx.lineTo(x + r, y + h);
-                    ctx.arcTo(x, y + h, x, y + h - r, r);
-                    ctx.lineTo(x, y + r);
-                    ctx.arcTo(x, y, x + r, y, r);
-                    ctx.closePath();
-                    ctx.fill();
+                    const radius = 0.5;
+                    drawRoundedRect(ctx, rect.x, rect.y, rect.w, rect.h, radius);
                 }
             });
             ctx.restore();
         }
         
+        function resizeAndDraw() {
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            const targetSize = Math.max(containerWidth, 100);
+            
+            const rect = canvas.getBoundingClientRect();
+            const actualWidth = rect.width;
+            const actualHeight = rect.height;
+            
+            if (actualWidth === 0 || actualHeight === 0) return;
+            
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = actualWidth * dpr;
+            canvas.height = actualHeight * dpr;
+            
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(dpr, dpr);
+            
+            const scaleX = actualWidth / ORIGINAL_W;
+            const scaleY = actualHeight / ORIGINAL_H;
+            
+            drawFrame(currentFrame, scaleX, scaleY, actualWidth, actualHeight);
+        }
+        
         function nextFrame() {
             currentFrame = (currentFrame + 1) % framesRaw.length;
-            const sx = canvas.width / ORIGINAL_W;
-            const sy = canvas.height / ORIGINAL_H;
-            drawFrame(currentFrame, sx, sy);
+            resizeAndDraw();
         }
         
         function startAnimation() {
@@ -311,41 +297,57 @@
             animInterval = setInterval(nextFrame, 150);
         }
         
-        // کلیک روی canvas - تعامل با دنیای خیالی
-        canvas.addEventListener('click', () => {
-            canvas.style.transform = 'scale(0.95)';
+        function changeText() {
+            textIndex = (textIndex + 1) % texts.length;
+            textElement.style.opacity = '0';
             setTimeout(() => {
-                canvas.style.transform = 'scale(1)';
-            }, 150);
-            
-            // افکت صوتی خیالی (وزوز خفیف)
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            oscillator.connect(gain);
-            gain.connect(audioContext.destination);
-            oscillator.frequency.value = 440;
-            gain.gain.value = 0.05;
-            oscillator.start();
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.5);
-            oscillator.stop(audioContext.currentTime + 0.5);
-        });
+                textElement.textContent = texts[textIndex];
+                textElement.style.opacity = '1';
+            }, 300);
+        }
         
-        // دکمه شروع
-        document.getElementById('startBtn').addEventListener('click', () => {
-            alert('✦ به دنیای خیالی K خوش آمدی ✦\n\nاین تازه شروع ماجراست...\nبه زودی ماجراجویی بزرگ در راه است.');
-        });
+        function startTextRotation() {
+            if (textInterval) clearInterval(textInterval);
+            textInterval = setInterval(changeText, 5000);
+        }
+        
+        let resizeObserver = null;
+        
+        function initResizeObserver() {
+            if (resizeObserver) resizeObserver.disconnect();
+            resizeObserver = new ResizeObserver(() => {
+                resizeAndDraw();
+            });
+            resizeObserver.observe(canvas);
+            if (canvas.parentElement) {
+                resizeObserver.observe(canvas.parentElement);
+            }
+        }
         
         window.addEventListener('resize', () => {
             resizeAndDraw();
         });
         
-        resizeAndDraw();
-        startAnimation();
-
-        // ============================================
-        // PWA Service Worker Registration
-        // ============================================
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeAndDraw, 50);
+        });
+        
+        function init() {
+            setTimeout(() => {
+                resizeAndDraw();
+            }, 0);
+            startAnimation();
+            startTextRotation();
+            initResizeObserver();
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+        
+        // PWA Service Worker برای آفلاین
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').then(() => {
                 console.log('✅ Service Worker registered');
@@ -353,6 +355,8 @@
                 console.log('SW registration failed:', err);
             });
         }
+        
+        console.log('K | انیمیشن میله‌ای | واکنش‌گرا | متن‌های چندزبانه');
     </script>
 </body>
 </html>
